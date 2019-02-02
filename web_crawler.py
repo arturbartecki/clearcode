@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+from url_normalize import url_normalize
 
 
 def get_all_links(url):
@@ -15,3 +16,41 @@ def get_site_title(url):
     html = requests.get(url)
     soup = BeautifulSoup(html.text, 'html.parser')
     return soup.title.text
+
+
+def validate_links(links, url):
+    """
+    Function returns validated set of links
+    Validation can be extended
+    """
+    valid_links = []
+    # Iterate through list and validate each link
+    for link in links:
+        # Put here any needed validation
+        if link is not None and 'mailto:' not in link:
+            if link == url:
+                valid_links.append(link)
+            elif url == link[:len(url)]:
+                # Normalize link if it leads to subsite
+                valid_link = url_normalize(link)
+                valid_links.append(link)
+            else:
+                try:
+                    # Section mainly for relative links
+                    # Try block prevents from getting errors from request.get()
+                    if link[0] != '/':
+                        link = f'/{link}'
+                    if (
+                        'http' not in link[:5] 
+                        and requests.get(url + link).status_code == 200
+                    ):
+                        if url[-1] == '/' and link[0] == '/':
+                            valid_link = f'{url[:-1]}{link}'
+                            valid_links.append(url_normalize(valid_link))
+                        else:
+                            valid_link = f'{url}{link}'
+                            valid_links.append(url_normalize(valid_link))
+                except requests.exceptions.ConnectionError as errorc:
+                    print(f"Connection error: {errorc}")
+    # Return set of links to avoid duplicates
+    return(set(valid_links))
