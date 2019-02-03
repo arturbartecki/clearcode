@@ -70,9 +70,17 @@ def iterate_dictionary(dictio, base_url):
                 }
                 # Add new objects to the dictionary
                 for link in valid_links:
-                    if not link in dictio:
+                    if link not in dictio:
                         dictio[link] = {}
                 # Break loop after adding keys to avoid errors
                 break
         iterate_dictionary(dictio, base_url)
+    return dictio
+
+
+def site_map(url):
+    """Fuction returns site map for given url"""
+    # Create base dictionary with initial object
+    dictio = {url: {}}
+    iterate_dictionary(dictio, url)
     return dictio
