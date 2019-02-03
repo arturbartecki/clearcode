@@ -78,9 +78,25 @@ def iterate_dictionary(dictio, base_url):
     return dictio
 
 
+def save_to_file(source):
+    """optional function for saving result in a file"""
+    with open('output.txt', 'w') as fn:
+        fn.write(str(source))
+
+
 def site_map(url):
     """Fuction returns site map for given url"""
     # Create base dictionary with initial object
     dictio = {url: {}}
-    iterate_dictionary(dictio, url)
-    return dictio
+    output = iterate_dictionary(dictio, url)
+    save_to_file(output)
+    return output
+
+
+def main():
+    url = input('Write full url to map. Example "http://0.0.0.0:8000"')
+    return site_map(url)
+
+
+if __name__ == '__main__':
+    main()
