@@ -41,7 +41,7 @@ def validate_links(links, url):
                     if link[0] != '/':
                         link = f'/{link}'
                     if (
-                        'http' not in link[:5] 
+                        'http' not in link[:5]
                         and requests.get(url + link).status_code == 200
                     ):
                         if url[-1] == '/' and link[0] == '/':
@@ -54,3 +54,25 @@ def validate_links(links, url):
                     print(f"Connection error: {errorc}")
     # Return set of links to avoid duplicates
     return(set(valid_links))
+
+
+def iterate_dictionary(dictio, base_url):
+    """Recursive function that add data to the dictionary"""
+    if {} in dictio.values():
+        for key in dictio:
+            if dictio[key] == {}:
+                title = get_site_title(key)
+                links = get_all_links(key)
+                valid_links = validate_links(links, base_url)
+                dictio[key] = {
+                    'title': title,
+                    'links': valid_links
+                }
+                # Add new objects to the dictionary
+                for link in valid_links:
+                    if not link in dictio:
+                        dictio[link] = {}
+                # Break loop after adding keys to avoid errors
+                break
+        iterate_dictionary(dictio, base_url)
+    return dictio
