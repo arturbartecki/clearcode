@@ -4,6 +4,31 @@ import pycountry
 import sys
 
 
+def open_csv_file(filename):
+    """ Function handle opening files with encoding utf-8 and utf-16"""
+    if filename[-4:] == '.csv':
+        # For valid .csv file, try encoding utf-8 then utf-16
+        try:
+            with open(filename, newline='', encoding='utf-8') as fp:
+                return convert_csv(fp)
+        except UnicodeDecodeError:
+            with open(filename, newline='', encoding='utf-16') as fp:
+                return convert_csv(fp)
+        except FileNotFoundError:
+            sys.stderr.write(
+                f'Fatal error. File {filename} does not exist.'
+            )
+            # Stop execution
+            sys.exit()
+    # If file extension is not .csv don't pass it into convert_csv
+    else:
+        sys.stderr.write(
+            f'Fatal error. File {filename} is not valid csv file.'
+        )
+        # Stop execution
+        sys.exit()
+
+
 def convert_csv(fp):
     """
     Function converts data from csv, and returns it as sorted list of tuples
