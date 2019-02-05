@@ -125,7 +125,7 @@ def write_data_to_csv(data):
     Function iterate over data and saves it into csv file with encoding utf-8
     """
     with open('output.csv', 'w', newline='\n', encoding='utf-8') as fp:
-        data_writer = csv.writer(fp, delimeter=',')
+        data_writer = csv.writer(fp, delimiter=',')
         for obj in data:
             data_writer.writerow(obj)
 
