@@ -1,7 +1,15 @@
 import csv
 import datetime
+import os
 import pycountry
 import sys
+
+
+# Crossplatform file path handling
+source_path = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)),
+    'input.csv'
+    )
 
 
 def open_csv_file(filename):
@@ -110,3 +118,23 @@ def convert_csv(fp):
     # Sort objects by date, then by country
     sorted_output = sorted(output, key=lambda x: (x[0], x[1]))
     return sorted_output
+
+
+def write_data_to_csv(data):
+    """
+    Function iterate over data and saves it into csv file with encoding utf-8
+    """
+    with open('output.csv', 'w', newline='\n', encoding='utf-8') as fp:
+        data_writer = csv.writer(fp, delimeter=',')
+        for obj in data:
+            data_writer.writerow(obj)
+
+
+# Handle running script
+def main():
+    data = open_csv_file(source_path)
+    return write_data_to_csv(data)
+
+
+if __name__ == '__main__':
+    main()
