@@ -4,7 +4,7 @@ Repository contains solutions to clearcode internship challenges.
 
 Both tasks were created and tested on Windows 10 using python 3.7
 
-##How to start:
+## How to start:
 1. Clone or download repository
 2. Create and activate new virutalenvironment
 3. Move to repository folder and run "pip install -r requirements.txt"
